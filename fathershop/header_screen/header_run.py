@@ -3,6 +3,8 @@ from selenium import webdriver
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
 from selenium.webdriver.support.ui import WebDriverWait
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 from constants import USERNAME, PASSWORD, LOGIN_URL
 from selenium_helpers import login,check_cache_btn,no_element_dropdown,create_new_btn,duplicate,delete,filter_search,edit, click_back_btn,reset_btn,image_options,save
 from header_helpers import navigate_to_header_screen,top_menu_edit,Topmenu_modulename,Top_menu_addNewItem,topmenu_name,topmenu_addstatus,select_icon,select_size,click_hovertab,\
@@ -225,8 +227,15 @@ class Header:
 class TestFathershopTheme:
     @pytest.fixture(scope='class')
     def setup(self):
-        chrome_driver_path = '/Users/zain/Downloads/chromedriver'
-        driver = webdriver.Chrome()
+        #chrome_driver_path = '/Users/zain/Downloads/chromedriver'
+        # Set path to chromedriver as per your configuration
+        webdriver_service = Service(ChromeDriverManager().install())
+        options = webdriver.ChromeOptions()
+        options.add_argument("--headless")  # Ensure GUI is off
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+
+        driver = webdriver.Chrome(options=options, service=webdriver_service)
         driver.get(LOGIN_URL)
         driver.maximize_window()
         #driver.set_window_size(1380, 1200)  # Set to a reasonable size
